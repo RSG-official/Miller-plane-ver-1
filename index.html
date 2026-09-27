@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Miller Plane 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Miller Plane / 3D</h1>
+    <div class="sub">drag to rotate &middot; scroll to zoom</div>
+    <div class="status" id="status">loading wasm&hellip;</div>
+  </header>
+
+  <div class="main">
+    <div class="panel">
+      <div class="tabs">
+        <button id="tabMiller" class="active">Miller indices</button>
+        <button id="tabIntercept">Intercepts</button>
+      </div>
+
+      <div id="millerFields">
+        <div class="field-row">
+          <div class="field">
+            <label><span class="axis-dot" style="background:var(--a-axis)"></span>h</label>
+            <div class="input-group">
+              <button type="button" class="sign-btn" data-target="h">+</button>
+              <input id="h" type="text" inputmode="numeric" pattern="[0-9]*" value="1">
+            </div>
+          </div>
+          <div class="field">
+            <label><span class="axis-dot" style="background:var(--b-axis)"></span>k</label>
+            <div class="input-group">
+              <button type="button" class="sign-btn" data-target="k">+</button>
+              <input id="k" type="text" inputmode="numeric" pattern="[0-9]*" value="1">
+            </div>
+          </div>
+          <div class="field">
+            <label><span class="axis-dot" style="background:var(--c-axis)"></span>l</label>
+            <div class="input-group">
+              <button type="button" class="sign-btn" data-target="l">+</button>
+              <input id="l" type="text" inputmode="numeric" pattern="[0-9]*" value="1">
+            </div>
+          </div>
+        </div>
+        <div class="hint">0 means the plane runs parallel to that axis.</div>
+      </div>
+
+      <div id="interceptFields" style="display:none">
+        <div class="field-row">
+          <div class="field">
+            <label><span class="axis-dot" style="background:var(--a-axis)"></span>p (x)</label>
+            <div class="input-group">
+              <button type="button" class="sign-btn" data-target="p">+</button>
+              <input id="p" type="text" inputmode="numeric" pattern="[0-9]*" value="1">
+            </div>
+          </div>
+          <div class="field">
+            <label><span class="axis-dot" style="background:var(--b-axis)"></span>q (y)</label>
+            <div class="input-group">
+              <button type="button" class="sign-btn" data-target="q">+</button>
+              <input id="q" type="text" inputmode="numeric" pattern="[0-9]*" value="1">
+            </div>
+          </div>
+          <div class="field">
+            <label><span class="axis-dot" style="background:var(--c-axis)"></span>r (z)</label>
+            <div class="input-group">
+              <button type="button" class="sign-btn" data-target="r">+</button>
+              <input id="r" type="text" inputmode="numeric" pattern="[0-9]*" value="1">
+            </div>
+          </div>
+        </div>
+        <div class="hint">Whole-number axis intercepts. 0 means the plane never crosses that axis.</div>
+      </div>
+
+      <button class="plot-btn" id="plotBtn" disabled>Plot plane</button>
+      <div class="msg" id="msg"></div>
+
+      <div class="readout">
+        <div class="row"><span class="k">MILLER INDICES</span><span class="v" id="outMiller">(1 1 1)</span></div>
+        <div class="row"><span class="k">INTERCEPTS</span><span class="v" id="outIntercepts">1, 1, 1</span></div>
+        <div class="plane-eq" id="outEq">x + y + z = 1</div>
+      </div>
+
+      <div class="legend">
+        <div class="li"><span class="sw" style="background:var(--a-axis)"></span>a&nbsp;/&nbsp;x&nbsp;axis</div>
+        <div class="li"><span class="sw" style="background:var(--b-axis)"></span>b&nbsp;/&nbsp;y&nbsp;axis</div>
+        <div class="li"><span class="sw" style="background:var(--c-axis)"></span>c&nbsp;/&nbsp;z&nbsp;axis</div>
+        <div class="li"><span class="sw" style="background:var(--plane)"></span>(hkl)&nbsp;plane</div>
+      </div>
+    </div>
+
+    <div class="viewport-wrap">
+      <div id="canvas-host"></div>
+      <div class="axis-label" id="labelA" style="color:var(--a-axis)">a</div>
+      <div class="axis-label" id="labelB" style="color:var(--b-axis)">b</div>
+      <div class="axis-label" id="labelC" style="color:var(--c-axis)">c</div>
+      <div class="drag-hint">drag &middot; pinch / scroll</div>
+    </div>
+  </div>
+</div>
+
+<!-- miller.js is generated by emcc from src/miller.cpp (see README / CI workflow).
+     It defines the global MillerModule() loader function. -->
+<script src="miller.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
