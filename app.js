@@ -220,7 +220,7 @@ function startApp(WASM) {
   }
 
   // ---------- camera orbit (manual, no external controls library needed) ----------
-  let radius = 5.2, theta = Math.PI * 0.28, phi = Math.PI * 0.36;
+  let radius = 8.2, theta = Math.PI * 0.28, phi = Math.PI * 0.36;
   const MIN_R = 2.2, MAX_R = 9;
   function updateCamera() {
     const sinPhi = Math.sin(phi);
