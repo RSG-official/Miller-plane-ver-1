@@ -8,5 +8,7 @@ scene firmation using three.js api
 and miller calculations in c++
 
 fronted ie(html/css)
+
 done using Ai
+
 and deployment with github actions
