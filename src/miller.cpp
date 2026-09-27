@@ -1,7 +1,4 @@
-// miller.cpp
-// Core Miller-index <-> intercept math, compiled to WebAssembly with Emscripten.
-// This is the same integer GCD/LCM logic as the original Android app,
-// just ported from Java to C++.
+// yeh mene core calculations kiye hai idhar
 
 #include <emscripten/emscripten.h>
 
@@ -33,7 +30,7 @@ int compute_lcm(int a, int b) { return lcm_(a, b); }
 
 // Converts three integer intercepts (p, q, r) to Miller indices (h, k, l).
 // A value of 0 means "the plane does not cross this axis" (parallel to it).
-// Results are written through the pointers. Returns 0 on success,
+// result ke liye pointers use kiye hai Returns 0 on success,
 // -1 if p == q == r == 0 (no valid plane).
 EMSCRIPTEN_KEEPALIVE
 int intercepts_to_miller(int p, int q, int r, int* h, int* k, int* l) {
