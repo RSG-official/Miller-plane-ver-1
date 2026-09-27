@@ -1,0 +1,61 @@
+name: Build WASM and deploy to Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 3.1.61
+
+      - name: Compile C++ to WebAssembly
+        run: |
+          mkdir -p dist
+          emcc src/miller.cpp -O2 \
+            -o dist/miller.js \
+            -s EXPORTED_FUNCTIONS="['_compute_gcd','_compute_lcm','_intercepts_to_miller','_miller_axis_intercept','_malloc','_free']" \
+            -s EXPORTED_RUNTIME_METHODS="['ccall','cwrap','getValue','setValue']" \
+            -s MODULARIZE=1 \
+            -s EXPORT_NAME=MillerModule \
+            -s ENVIRONMENT=web \
+            -s ALLOW_MEMORY_GROWTH=1
+
+      - name: Copy static site files
+        run: |
+          cp index.html dist/
+          cp app.js dist/
+          cp style.css dist/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
